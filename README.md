@@ -7,7 +7,7 @@ If I make a change to the code of the app and save it when Expo server is runnin
 
 This code works "perfectly" fine under Expo SDK 51.
 
-## Installation steps
+## Reproduction steps
 
 1. run **npm install expo@latest** (hence it was latest 52 version).
 2. run **npx expo install --fix**
