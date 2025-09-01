@@ -1,3 +1,4 @@
+import { useCallback, useRef } from "react";
 import { Dimensions, View } from "react-native";
 import MapView, { LatLng, Marker, PROVIDER_GOOGLE, Region } from "react-native-maps";
 
@@ -15,11 +16,20 @@ export default function App() {
     // axis will be larger than 1 KM depending on devices aspect ratio
     const initialRegion: Region = getRegion(mapCenter, radius);
 
+    const mapRef = useRef<MapView>(null);
+
     // create markers for events with coordinates in the vicinity of the mapCenter
     // see events array at the bottom of this module.
     const markers = events.map((e, i: number) => {
         return <Marker coordinate={{ latitude: e.lat, longitude: e.long }} key={i} />;
     });
+
+    const handleMapReady = useCallback(() => {
+        setTimeout(() => {
+            console.log('Map is loaded ', mapRef.current);
+            mapRef.current?.animateCamera({ center: mapCenter }, { duration: 150 });
+        }, 500);
+    }, []);
 
     return (
         <View
@@ -32,13 +42,15 @@ export default function App() {
             <MapView
                 provider={PROVIDER_GOOGLE}
                 initialRegion={initialRegion}
+                ref={mapRef}
                 showsUserLocation={true}
                 showsMyLocationButton={true}
                 showsScale={true}
-                onMapReady={(e) => console.log('Map is loaded')}
+                onMapReady={handleMapReady}
                 style={{
-                    width: "100%",
-                    height: "100%",
+                    width: "99%",
+                    height: "99%",
+                    borderWidth: 1,
                 }}
             >
                 {markers}
